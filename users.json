@@ -1,0 +1,26 @@
+{
+  "5532238818": {
+    "first_seen": "09/03/2026 14:49:38",
+    "last_active": "09/03/2026 15:15:21",
+    "username": "trongtrahoang",
+    "total_commands": 6,
+    "daily_commands": {
+      "09/03/2026": 6
+    },
+    "is_member": true,
+    "total_claims": 1,
+    "claim_dates": [
+      "09/03/2026 15:07:10"
+    ]
+  },
+  "5398451775": {
+    "first_seen": "09/03/2026 14:49:44",
+    "last_active": "09/03/2026 15:08:59",
+    "username": "vuducanh2211",
+    "total_commands": 2,
+    "daily_commands": {
+      "09/03/2026": 2
+    },
+    "is_member": true
+  }
+}

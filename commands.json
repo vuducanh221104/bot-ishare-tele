@@ -1,0 +1,28 @@
+{
+  "user": [
+    {"command": "start", "description": "🚀 Khởi động bot / Start bot"},
+    {"command": "checkchannel", "description": "✅ Kiểm tra / Check channel"},
+    {"command": "claimlink", "description": "🎁 Nhận gift / Get gift link"},
+    {"command": "help", "description": "📋 Hướng dẫn / Help"},
+    {"command": "lang", "description": "🌐 Đổi ngôn ngữ / Change language"},
+    {"command": "ping", "description": "🏓 Ping bot"}
+  ],
+  "admin": [
+    {"command": "start", "description": "🚀 Khởi động bot / Start bot"},
+    {"command": "checkchannel", "description": "✅ Kiểm tra / Check channel"},
+    {"command": "claimlink", "description": "🎁 Nhận gift / Get gift link"},
+    {"command": "help", "description": "📋 Hướng dẫn / Help"},
+    {"command": "lang", "description": "🌐 Đổi ngôn ngữ / Change language"},
+    {"command": "ping", "description": "🏓 Ping bot"},
+    {"command": "addlink", "description": "➕ Thêm link / Add link"},
+    {"command": "editlink", "description": "✏️ Sửa link / Edit link"},
+    {"command": "deletelink", "description": "🗑️ Xóa link / Delete link"},
+    {"command": "listlinks", "description": "📋 Danh sách / List links"},
+    {"command": "togglelink", "description": "🔀 Bật/tắt / Toggle link"},
+    {"command": "stopbot", "description": "⛔ Dừng bot / Stop bot"},
+    {"command": "pingstats", "description": "📊 Thống kê ping / Ping stats"},
+    {"command": "stats", "description": "👥 Thống kê user / User stats"},
+    {"command": "weekstats", "description": "📅 Theo tuần / Weekly stats"},
+    {"command": "monthstats", "description": "📆 Theo tháng / Monthly stats"}
+  ]
+}
