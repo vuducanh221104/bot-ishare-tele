@@ -22,6 +22,32 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Retry settings
+MAX_RETRIES = 3
+RETRY_DELAY = 1  # seconds
+
+
+async def send_message_with_retry(update_or_msg, text: str, **kwargs):
+    """Gửi message với retry khi lỗi"""
+    from telegram.error import TelegramError, BadRequest, Forbidden, NetworkError
+    
+    message = update_or_msg.message if hasattr(update_or_msg, 'message') else update_or_msg
+    
+    for attempt in range(MAX_RETRIES):
+        try:
+            return await message.reply_text(text, **kwargs)
+        except (NetworkError, Forbidden) as e:
+            if attempt < MAX_RETRIES - 1:
+                logger.warning(f"Lỗi network, thử lại lần {attempt + 1}: {e}")
+                await asyncio.sleep(RETRY_DELAY * (attempt + 1))
+            else:
+                logger.error(f"Gửi message thất bại sau {MAX_RETRIES} lần: {e}")
+                raise
+        except BadRequest as e:
+            logger.error(f"BadRequest error: {e}")
+            raise
+
+
 # Cache đơn giản để tránh spam API (lưu trong memory)
 # Format: {user_id: {"status": "member/left", "timestamp": time}}
 _member_cache = {}
@@ -347,11 +373,26 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text(
-            "🌐 <b>Chọn ngôn ngữ / Choose language:</b>",
-            reply_markup=reply_markup,
-            parse_mode='HTML'
-        )
+        
+        # Gửi message với error handling
+        try:
+            await update.message.reply_text(
+                "🌐 <b>Chọn ngôn ngữ / Choose language:</b>",
+                reply_markup=reply_markup,
+                parse_mode='HTML'
+            )
+        except Exception as e:
+            logger.error(f"Lỗi gửi language selection: {e}")
+            # Thử gửi lại không có inline keyboard
+            try:
+                await update.message.reply_text(
+                    "🌐 <b>Chọn ngôn ngữ / Choose language:</b>\n\n"
+                    "🇻🇳 Gõ /vi cho Tiếng Việt\n"
+                    "🇬🇧 Type /en for English",
+                    parse_mode='HTML'
+                )
+            except Exception as e2:
+                logger.error(f"Lỗi gửi message lần 2: {e2}")
         return
     
     # Đã có ngôn ngữ, hiển thị welcome
@@ -1137,14 +1178,7 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if lang_code in _langs:
             set_user_lang(uid, lang_code)
             await query.answer("✅", show_alert=False)
-            # Hiển thị message với keyboard
-            keyboard = [
-                [InlineKeyboardButton(t(uid, "btn_join_channel"), url=f"https://t.me/{CHANNEL_USERNAME.replace('@', '')}")],
-                [InlineKeyboardButton(t(uid, "btn_joined_check"), callback_data="check_membership")],
-                [InlineKeyboardButton(t(uid, "btn_view_guide"), callback_data="show_help")]
-            ]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            await query.edit_message_text(t(uid, "lang_changed"), reply_markup=reply_markup, parse_mode='HTML')
+            await query.edit_message_text(t(uid, "lang_changed"), parse_mode='HTML')
         else:
             await query.answer("❌", show_alert=True)
 
