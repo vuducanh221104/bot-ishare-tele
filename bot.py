@@ -77,7 +77,7 @@ def set_user_lang(user_id: int, lang: str):
     """Đặt ngôn ngữ cho user"""
     _user_langs[str(user_id)] = lang
     save_user_langs(_user_langs)
-
+# 
 def t(user_id: int, key: str, **kwargs) -> str:
     """Lấy text theo ngôn ngữ user, hỗ trợ format variables"""
     lang = get_user_lang(user_id)
