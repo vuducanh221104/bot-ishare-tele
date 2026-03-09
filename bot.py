@@ -1137,7 +1137,14 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if lang_code in _langs:
             set_user_lang(uid, lang_code)
             await query.answer("✅", show_alert=False)
-            await query.edit_message_text(t(uid, "lang_changed"), parse_mode='HTML')
+            # Hiển thị message với keyboard
+            keyboard = [
+                [InlineKeyboardButton(t(uid, "btn_join_channel"), url=f"https://t.me/{CHANNEL_USERNAME.replace('@', '')}")],
+                [InlineKeyboardButton(t(uid, "btn_joined_check"), callback_data="check_membership")],
+                [InlineKeyboardButton(t(uid, "btn_view_guide"), callback_data="show_help")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await query.edit_message_text(t(uid, "lang_changed"), reply_markup=reply_markup, parse_mode='HTML')
         else:
             await query.answer("❌", show_alert=True)
 
